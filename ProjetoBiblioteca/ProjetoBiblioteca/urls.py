@@ -23,6 +23,7 @@ from biblioteca_app.api.viewsets import UsuarioViewSet
 from biblioteca_app.api.viewsets import LivroViewSet
 from biblioteca_app.api.viewsets import SessaoViewSet
 
+from rest_framework.authtoken.views import obtain_auth_token
 
 router = routers.DefaultRouter()
 router.register(r'emprestimos', EmprestimoViewSet)
@@ -33,4 +34,5 @@ router.register(r'sessoes', SessaoViewSet)
 urlpatterns = [
     path('',include(router.urls)),
     path('admin/', admin.site.urls),
+    path('api-token-auth/', obtain_auth_token),
 ]
