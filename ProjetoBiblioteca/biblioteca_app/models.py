@@ -60,6 +60,9 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     def is_staff(self):
         return self.is_admin
 
+    def get_name(self):
+        return self.nome
+
 
 class Sessao(models.Model):
     codigo = models.AutoField(primary_key=True)
@@ -97,4 +100,4 @@ class Emprestimo(models.Model):
         verbose_name_plural = 'Emprestimos'
 
     def __str__(self):
-        return self.codigo
+        return self.usuario.get_name()
