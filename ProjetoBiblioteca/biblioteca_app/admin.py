@@ -57,7 +57,7 @@ class UserAdmin(BaseUserAdmin):
         (None, {'fields': ('email', 'password',)}),
         ('Gerenciamento de Usuarios', {'fields': ('is_admin', 'is_active',)}),
         ('Informações Pessoais', {'fields': ('nome', 'endereco', 'telefone',)}),
-        ('Permissões', {'fields': ('groups',)}),
+        ('Permissões', {'fields': ('groups','user_permissions')}),
         ('Datas Importantes', {'fields': ('last_login', 'date_joined',)}),
     )
 
@@ -67,7 +67,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': (
                  'email', 'is_admin', 'nome', 'endereco', 'telefone', 'password1', 'password2')}
          ),
-         ('Permissões', {'fields': ('groups',)}),
+         ('Permissões', {'fields': ('groups', 'user_permissions')}),
     )
     search_fields = ('email',)
     ordering = ('-matricula',)

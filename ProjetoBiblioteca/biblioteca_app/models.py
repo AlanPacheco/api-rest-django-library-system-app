@@ -4,6 +4,7 @@ from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 from django.contrib.auth.models import PermissionsMixin
+from django.contrib import auth
 
 
 class UsuarioManager(BaseUserManager):
@@ -50,11 +51,40 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+    def _user_has_perm(user, perm, obj):
+        for backend in auth.get_backends():
+            if not hasattr(backend, 'has_perm'):
+                continue
+            try:
+                if backend.has_perm(user, perm, obj):
+                    return True
+            except PermissionDenied:
+                return False
+        return False
+
+    def _user_has_module_perms(user, app_label):
+        for backend in auth.get_backends():
+            if not hasattr(backend, 'has_module_perms'):
+                continue
+            try:
+                if backend.has_module_perms(user, app_label):
+                    return True
+            except PermissionDenied:
+                return False
+        return False
+
+
     def has_perm(self, perm, obj=None):
-        return True
+        # admin ativos retorna true
+        if self.is_active and self.is_admin:
+            return True
+        # Caso contrario, eh verificado o backend
+        return self._user_has_perm(perm, obj)
 
     def has_module_perms(self, app_label):
-        return True
+        if self.is_active and self.is_admin:
+            return True
+        return self._user_has_module_perms(app_label)
 
     @property
     def is_staff(self):
